@@ -1,3 +1,9 @@
+
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parent / ".env", override=True)
+
 """
     Train a YOLO model on the exam-cheating Roboflow dataset.
     Usage:
@@ -26,9 +32,9 @@ DATASET_FORMAT = "yolov11"
 BASE_MODEL = "yolo11m.pt"
 RESUME_FROM = None  
 IMG_SIZE = 640
-EPOCHS = 100
+EPOCHS = 80
 # PATIENCE = 30        # stop early if val mAP doesn't improve for this many epochs
-BATCH_SIZE = -1        # -1 = auto-pick the largest batch that fits in GPU memory
+BATCH_SIZE = 32        # -1 = auto-pick the largest batch that fits in GPU memory
 
 ## Augmentation settings for YOLOv11 training. See https://docs.roboflow.com/roboflow-train/augmentation for details.
 AUGMENTATION = dict(
@@ -86,6 +92,7 @@ def train(data_yaml_path):
             project=PROJECT_DIR,
             name=RUN_NAME,
             cos_lr=True,
+            amp=False,
             **AUGMENTATION,
         )
     return model, results
